@@ -1,5 +1,5 @@
 import os
-# import tqdm
+import time
 import numpy as np
 import pandas as pd
 import concurrent.futures
@@ -19,6 +19,8 @@ class Preprocessor:
         :param int MAIG: 从pcap数据包中恢复流级别数据所设定的最大超时间隔（minimum allowed interflow gap），单位毫秒
         :raise ValueError: 如果f_type既不等于'flow'也不等于'pcap'
         """
+        start_t = time.time()
+        print("[Info >> preprocessing] Loading input trace and proprocessing......")
         self.cln_names = column_names
         if f_type=="flow":
             self.trace_input = self.get_flow_level_trace(f_path, f_name)
@@ -34,6 +36,8 @@ class Preprocessor:
         self.cdf_iat = self.get_cdf('iat')
         self.cdf_size = self.get_cdf('size')
         self.discretization_to_flow_type()
+        print("[Info >> preprocessing] Finished! Using time: %.2f(s)." % (time.time()-start_t))
+        print(f"[Info >> preprocessing] Input trace has {self.trace_input.shape[0]} flows in total.")
     
     def get_flow_level_trace(self, f_path, f_name):
         """
@@ -114,13 +118,13 @@ class Preprocessor:
         ip_list = list(np.sort(np.unique(ip_list)))     # 所有 ip 按字符顺序排序
         return dict(zip(ip_list, np.arange(len(ip_list))))
     
-    def get_ordered_ippair(self):
+    def get_ordered_ippair(self) -> list:
         self.trace_input['srcid'] = self.trace_input['srcip'].map(self.ip_id_dict)
         self.trace_input['dstid'] = self.trace_input['dstip'].map(self.ip_id_dict)
         self.trace_input['pairid'] = self.trace_input['srcid'].astype('str') + '_' + \
                                      self.trace_input['dstid'].astype('str')
         self.trace_input.drop(['srcid', 'dstid'], axis=1, inplace=True)
-        pair_list = np.sort(np.unique(self.trace_input['pairid'].values))
+        pair_list = list(np.sort(np.unique(self.trace_input['pairid'].values)))
         return pair_list
     
     def get_cdf(self, col_name):
@@ -152,10 +156,10 @@ class Preprocessor:
     def discretization_to_flow_type(self):
         arr_size = np.log10(1.0 + self.trace_input['size'].values)
         arr_iat = np.log10(1.0 + self.trace_input['iat'].values)
-        df_cdf_size = pd.DataFrame([list(self.cdf_size.keys()), list(self.cdf_size.values())], 
-                                    columns=['percentile', 'cdf'])
-        df_cdf_iat = pd.DataFrame([list(self.cdf_iat.keys()), list(self.cdf_iat.values())], 
-                                    columns=['percentile', 'cdf'])
+        df_cdf_size = pd.DataFrame({'percentile': list(self.cdf_size.keys()), 
+                                    'cdf': list(self.cdf_size.values())})
+        df_cdf_iat = pd.DataFrame({'percentile': list(self.cdf_iat.keys()), 
+                                   'cdf': list(self.cdf_iat.values())})
         self.trace_input['size_d'] = self.discretization(df_cdf_size, arr_size)
         self.trace_input['iat_d'] = self.discretization(df_cdf_iat, arr_iat)
         self.trace_input['flow_type'] = '(' + self.trace_input['size_d'].astype('str') + \
@@ -163,20 +167,21 @@ class Preprocessor:
         del arr_size, arr_iat, df_cdf_size, df_cdf_iat
         self.trace_input.drop(['size_d', 'iat_d'], axis=1, inplace=True)
 
-    def discretization(cdf, arr):
+    def discretization(self, cdf, arr):
         percent = cdf['percentile'].values
         bounds = cdf['cdf'].values
         length = len(percent)
         arr_res = []
         for x in arr:
             if x==0.0:
-                return arr_res.append(0)
+                arr_res.append(0)
             elif x>bounds[-1]:
-                print(f"warning: input x exceed the max value in CDF.\n-> x:{x}, max of CDF:{bounds[-1]}")
-                return arr_res.append(10000)
-            for i in range(1,length):
-                if (x>bounds[i-1]) and (x<=bounds[i]):
-                    arr_res.append(int(percent[i]))
+                # print(f"warning: input x exceed the max value in CDF.\n-> x:{x}, max of CDF:{bounds[-1]}")
+                arr_res.append(10000)
+            else:
+                for i in range(1,length):
+                    if (x>bounds[i-1]) and (x<=bounds[i]):
+                        arr_res.append(int(percent[i]))
         return arr_res
 
 
