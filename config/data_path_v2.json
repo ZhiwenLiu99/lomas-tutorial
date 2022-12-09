@@ -1,0 +1,51 @@
+{
+    "UN1": {"path":"/root/zliu/01-UN1/",
+            "filenames": ["univ1_pt1", "univ1_pt2", "univ1_pt3", "univ1_pt4",
+                          "univ1_pt5", "univ1_pt6", "univ1_pt7", "univ1_pt8",
+                          "univ1_pt9", "univ1_pt10", "univ1_pt11", "univ1_pt12",
+                          "univ1_pt13", "univ1_pt14", "univ1_pt15", "univ1_pt16",
+                          "univ1_pt17", "univ1_pt18", "univ1_pt19", "univ1_pt20"],
+            "type": "pcap",
+            "protocol": "tcp",
+            "ts_unit": "us",
+            "MAIG": 1e6},
+    
+    "UN2": {"path":"/root/zliu/01-UN2/",
+            "filenames": ["univ2_pt0", "univ2_pt1", "univ2_pt2", "univ2_pt3",
+                          "univ2_pt4", "univ2_pt5", "univ2_pt6", "univ2_pt7",
+                          "univ2_pt8"],
+            "type": "pcap",
+            "protocol": "udp",
+            "ts_unit": "us",
+            "MAIG": 1e6},
+    
+    "UN1_flow": {"path":"/root/zliu/lomas-tutorial/data/",
+            "filenames": "UN1_flow.csv",
+            "type": "flow",
+            "protocol": "tcp",
+            "ts_unit": "us"},
+
+    "UN2_flow": {"path":"/root/zliu/lomas-tutorial/data/",
+            "filenames": "UN2_flow.csv",
+            "type": "flow",
+            "protocol": "udp",
+            "ts_unit": "us"},
+
+    "FB_Cluster_A": {"path":"/root/zliu/lomas-tutorial/data/",
+                    "filenames": "fb_clusterA.csv",
+                    "type": "flow",
+                    "protocol": "tcp",
+                    "ts_unit": "s"},
+    
+    "FB_Cluster_B": {"path":"/root/zliu/lomas-tutorial/data/",
+                    "filenames": "fb_clusterB.csv",
+                    "type": "flow",
+                    "protocol": "tcp",
+                    "ts_unit": "s"},
+    
+    "FB_Cluster_C": {"path":"/root/zliu/lomas-tutorial/data/",
+                    "filenames": "fb_clusterC.csv",
+                    "type": "flow",
+                    "protocol": "tcp",
+                    "ts_unit": "s"}
+}

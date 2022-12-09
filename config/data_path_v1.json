@@ -1,0 +1,37 @@
+{
+    "UN1": {"path":"/root/zliu/01-UN1/",
+            "filenames": ["univ1_pt1", "univ1_pt2", "univ1_pt3", "univ1_pt4",
+                          "univ1_pt5", "univ1_pt6", "univ1_pt7", "univ1_pt8",
+                          "univ1_pt9", "univ1_pt10", "univ1_pt11", "univ1_pt12",
+                          "univ1_pt13", "univ1_pt14", "univ1_pt15", "univ1_pt16",
+                          "univ1_pt17", "univ1_pt18", "univ1_pt19", "univ1_pt20"],
+            "type": "pcap",
+            "protocol": "tcp",
+            "ts_unit": "us"},
+    
+    "UN2": {"path":"/root/zliu/01-UN2/",
+            "filenames": ["univ2_pt0", "univ2_pt1", "univ2_pt2", "univ2_pt3",
+                          "univ2_pt4", "univ2_pt5", "univ2_pt6", "univ2_pt7",
+                          "univ2_pt8"],
+            "type": "pcap",
+            "protocol": "udp",
+            "ts_unit": "us"},
+    
+    "FB_Cluster_A": {"path":"/root/zliu/01-ClusterA/",
+                    "filenames": "fb_clusterA_full.csv",
+                    "type": "flow",
+                    "protocol": "tcp",
+                    "ts_unit": "s"},
+    
+    "FB_Cluster_B": {"path":"/root/zliu/01-ClusterB/",
+                    "filenames": "fb_clusterB_full.csv",
+                    "type": "flow",
+                    "protocol": "tcp",
+                    "ts_unit": "s"},
+    
+    "FB_Cluster_C": {"path":"/root/zliu/01-ClusterC/",
+                    "filenames": "fb_clusterC_full.csv",
+                    "type": "flow",
+                    "protocol": "tcp",
+                    "ts_unit": "s"}
+}
