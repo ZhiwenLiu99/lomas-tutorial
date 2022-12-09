@@ -7,7 +7,7 @@ Lomas contains the following key modules:
 
 - ``lomas.preprocessor``: A package for preprocessing network trace. This package can deal with 
   many input file formats (e.g. CSV, Excel, Pickle, Parquet, Pcap, etc.).  
-- ``trafpy.model``: A package for learning the high dimension distribution of input trace. 
+- ``lomas.model``: A package for learning the high dimension distribution of input trace. 
   This package can also be used for generating (or recreating) synthetic network traces for downstream applications.
 
 
@@ -30,8 +30,8 @@ Documentation
    :maxdepth: 1
    :caption: Contents:
 
-   Install
-   Tutorial
-   API Docs
-   License
-   Citing
+   install
+   tutorial
+   api
+   license
+   citing
