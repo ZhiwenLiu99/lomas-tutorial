@@ -1,4 +1,4 @@
-lomas package
+Lomas API
 ==============
 
 Subpackages
