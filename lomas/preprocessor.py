@@ -7,11 +7,13 @@ from scapy.utils import RawPcapReader
 from scapy.layers.l2 import Ether
 from scapy.layers.inet import IP, TCP, UDP
 
-__all__ = ["Preprocessor"]
+__all__ = ["Preprocessor", "PCAPProcessor"]
 
 class Preprocessor:
     def __init__(self, f_path, f_name, f_type, column_names=None, protocol=None, MAIG=None):
         """
+        preprocessor model
+
         :param str f_path: 输入的trace数据所在文件夹路径
         :param str f_name: 输入的trace数据文件名（pcap文件类型输入一组 f_name，List[f_name]）
         :param str f_type: 输入的trace数据类型
@@ -187,6 +189,9 @@ class Preprocessor:
 
 class PCAPProcessor:
     def __init__(self, f_name, protocol, MAIG):
+        """
+        pcap-file processor model
+        """
         self.f_name = f_name
         self.protocol = protocol
         self.MAIG = MAIG

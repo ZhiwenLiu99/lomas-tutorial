@@ -15,6 +15,9 @@ __all__ = ["LomasModel"]
 
 class LomasModel:
     def __init__(self, ip_id_dict, ordered_ippair, cdf_iat, cdf_size):
+        """
+        lomas model
+        """
         self.ip_id_dict = self.transpose_dict(ip_id_dict)
         self.ordered_ippair = ordered_ippair
         self.cdf_iat = pd.DataFrame({'percentile': list(cdf_iat.keys()), 
