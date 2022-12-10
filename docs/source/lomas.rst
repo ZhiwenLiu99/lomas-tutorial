@@ -1,11 +1,10 @@
 Lomas API
 ==============
 
-Subpackages
------------
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 2
+   :caption: Submodules:
 
    lomas.preprocessor
    lomas.model

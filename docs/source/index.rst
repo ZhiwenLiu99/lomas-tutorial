@@ -32,5 +32,13 @@ Documentation
 
    install
    tutorial
-   api
+   lomas
    license
+
+
+Index
+=====
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
