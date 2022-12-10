@@ -1,4 +1,4 @@
-lomas.preprocessor package
+lomas.preprocessor submodule
 ===================
 
 .. automodule:: lomas.preprocessor

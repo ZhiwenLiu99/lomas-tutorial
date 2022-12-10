@@ -2,14 +2,11 @@ import re
 import time
 import numpy as np
 import pandas as pd
-
-# 设置这个能够看到模型的训练进度
+from gensim import corpora
+from gensim.models import LdaModel
 import logging
 # logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.ERROR)
-
-from gensim import corpora
-from gensim.models import LdaModel
 
 __all__ = ["LomasModel"]
 
@@ -17,6 +14,11 @@ class LomasModel:
     def __init__(self, ip_id_dict, ordered_ippair, cdf_iat, cdf_size):
         """
         lomas model
+
+        :param ip_id_dict:
+        :param ordered_ippair:
+        :param cdf_iat:
+        :param cdf_size:
         """
         self.ip_id_dict = self.transpose_dict(ip_id_dict)
         self.ordered_ippair = ordered_ippair

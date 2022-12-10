@@ -1,4 +1,4 @@
-lomas.model package
+lomas.model submodule
 ===================
 
 .. automodule:: lomas.model
