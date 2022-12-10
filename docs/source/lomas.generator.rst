@@ -1,7 +1,7 @@
-lomas.model submodule
+lomas.generator submodule
 ======================
 
-.. automodule:: lomas.model
+.. automodule:: lomas.generator
    :members:
    :undoc-members:
    :special-members:

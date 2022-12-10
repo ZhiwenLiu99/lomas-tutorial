@@ -8,12 +8,12 @@ import logging
 # logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.ERROR)
 
-__all__ = ["LomasModel"]
+__all__ = ["Generator"]
 
-class LomasModel:
+class Generator:
     def __init__(self, ip_id_dict, ordered_ippair, cdf_iat, cdf_size):
         """
-        lomas model
+        generator submodel
 
         :param ip_id_dict:
         :param ordered_ippair:

@@ -11,7 +11,7 @@ Lomas.
    :caption: Contents:
 
    tutorial_preprocessor
-   tutorial_model
+   tutorial_generator
 
 
 

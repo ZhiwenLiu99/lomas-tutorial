@@ -2,7 +2,7 @@ import os
 import pdb
 from lomas import utils
 from lomas.preprocessor import Preprocessor
-from lomas.model import LomasModel
+from lomas.generator import Generator
 
 if __name__ == "__main__":
     setting_path = os.path.join(os.getcwd(), "./config/data_path_v2.json")
@@ -14,7 +14,7 @@ if __name__ == "__main__":
                         f_type=config[trace_name]['type'],
                         column_names=config[trace_name]['cols'])
 
-    model = LomasModel(ip_id_dict=data.ip_id_dict, 
+    model = Generator(ip_id_dict=data.ip_id_dict, 
                        ordered_ippair=data.ordered_ippair, 
                        cdf_iat=data.cdf_iat, 
                        cdf_size=data.cdf_size)

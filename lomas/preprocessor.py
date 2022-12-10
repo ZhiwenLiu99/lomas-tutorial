@@ -12,7 +12,7 @@ __all__ = ["Preprocessor", "PCAPProcessor"]
 class Preprocessor:
     def __init__(self, f_path, f_name, f_type, column_names=None, protocol=None, MAIG=None):
         """
-        preprocessor model
+        preprocessor submodel
 
         :param str f_path: 输入的trace数据所在文件夹路径
         :param str f_name: 输入的trace数据文件名（pcap文件类型输入一组 f_name，List[f_name]）

@@ -7,5 +7,5 @@ Lomas API
    :caption: Submodules:
 
    lomas.preprocessor
-   lomas.model
+   lomas.generator
    lomas.utils
