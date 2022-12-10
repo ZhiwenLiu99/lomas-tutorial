@@ -1,4 +1,4 @@
-lomas.model submodule
+lomas.utils submodule
 ======================
 
 .. automodule:: lomas.utils
