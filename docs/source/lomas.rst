@@ -8,3 +8,4 @@ Lomas API
 
    lomas.preprocessor
    lomas.model
+   lomas.utils

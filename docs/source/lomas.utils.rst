@@ -1,7 +1,7 @@
-lomas.preprocessor submodule
-============================
+lomas.model submodule
+======================
 
-.. automodule:: lomas.preprocessor
+.. automodule:: lomas.utils
    :members:
    :undoc-members:
    :special-members:

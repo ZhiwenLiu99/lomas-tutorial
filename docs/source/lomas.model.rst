@@ -1,5 +1,5 @@
 lomas.model submodule
-===================
+======================
 
 .. automodule:: lomas.model
    :members:
