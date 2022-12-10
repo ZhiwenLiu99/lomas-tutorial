@@ -34,4 +34,3 @@ Documentation
    tutorial
    api
    license
-   citing
