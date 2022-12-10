@@ -1,2 +1,2 @@
-Lomas Model
-===========
+Lomas Generator
+===============
