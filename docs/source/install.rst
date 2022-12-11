@@ -22,4 +22,4 @@ or conda::
 You should then be able to import Lomas into your Python script from any directory
 on your machine::
 
-    >>> import trafpy
+    >>> import lomas
