@@ -6,7 +6,7 @@ from gensim import corpora
 from gensim.models import LdaModel
 import logging
 # logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
-logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.ERROR)
+# logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.ERROR)
 
 __all__ = ["Generator"]
 
@@ -38,6 +38,8 @@ class Generator:
         获取每个源目的对之间的流数据，并以二维数组的数据类型储存
 
         :param pandas.DataFrame trace_input: can be accessed using lomas.Preprocessor.trace_input
+        :return:
+        :rtype:
         """
         start_t = time.time()
         for ippair in self.ordered_ippair:
@@ -106,7 +108,8 @@ class Generator:
         """
         生成新的合成流量数据
 
-        :param int time_limit:         
+        :param int time_limit: control how many flows will be generated (s.t. [num. of flow]*[avg. iat] <= [time_limit])
+        :param int time_unit: time uint of time_limit
         """
         np.random.seed(2022)
         start_t = time.time()
@@ -128,6 +131,11 @@ class Generator:
         print(f"[Info >> model generating] Time limit is: {time_limit}({time_unit}). Generate {self.trace_syn.shape[0]} flows in total.")
 
     def sampling_value(self, doc_idx):
+        """
+        从隐空间概率分布矩阵中采样，以概率分布产生流大小和流间隔的联合取值
+
+        :param int doc_idx: index according to ordered IP pair
+        """
         theta = self.doc_topics[doc_idx].copy()
         z = np.argmax(np.random.multinomial(1, theta))    # sample topic index , e.g. select topic
         beta = self.topic_terms[z].copy()                 # sample word from topic
