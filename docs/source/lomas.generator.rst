@@ -1,5 +1,5 @@
 lomas.generator submodule
-======================
+=========================
 
 .. automodule:: lomas.generator
    :members:
