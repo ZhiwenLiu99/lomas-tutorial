@@ -10,7 +10,18 @@ import logging
 
 __all__ = ["Generator"]
 
-class Generator:
+class HelloWorld(object):
+    """This is the class HelloWorld
+    it prints "hello world!"
+    """
+    def __init__(self):
+        """This is the class HelloWorld
+        When an instance is created prints the string "hello world!"
+        """
+        print("hello world!")
+
+
+class Generator(object):
     def __init__(self, ip_id_dict, ordered_ippair, cdf_iat, cdf_size):
         """
         基于历史流量数据进行模型训练、基于训练好的模型产生新的合成流量数据
