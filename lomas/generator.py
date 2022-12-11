@@ -13,7 +13,7 @@ __all__ = ["Generator"]
 class Generator:
     def __init__(self, ip_id_dict, ordered_ippair, cdf_iat, cdf_size):
         """
-        功能：基于历史流量数据进行模型训练、基于训练好的模型产生新的合成流量数据。
+        基于历史流量数据进行模型训练、基于训练好的模型产生新的合成流量数据
 
         :param dict ip_id_dict: key=index of IP, value=(anonymized)IP addr
         :param list ordered_ippair: ordered IP pair (IP is represented by its index)
@@ -34,6 +34,11 @@ class Generator:
         self.trace_syn = None
 
     def initialize(self, trace_input):
+        """
+        获取每个源目的对之间的流数据，并以二维数组的数据类型储存
+
+        :param pandas.DataFrame trace_input: can be accessed using lomas.Preprocessor.trace_input
+        """
         start_t = time.time()
         for ippair in self.ordered_ippair:
             tmp = trace_input[trace_input['pairid']==ippair]['flow_type'].values
@@ -45,6 +50,11 @@ class Generator:
         print(f"[Info >> model init] Num. of ip-pair: {len(self.corpus)}.")
 
     def transpose_dict(self, dic):
+        """
+        将字典的键和值进行转置
+
+        :param dict dic: dict to be transposed by key-value
+        """
         return dict((v, k) for k, v in dic.items())
 
     def train(self, 
@@ -54,13 +64,13 @@ class Generator:
               iterations=400, 
               eval_every = None):
         """
-        Lomas 模型训练
+        模型训练
 
-        :param int num_topics: 隐空间的维度。维度越高，建模精确度越高，但隐空间的可解释性越差
+        :param int num_topics: dimension of latent space
         :param int chunksize:  num of documents will be processed at a time
-        :param int passes:     epochs
+        :param int passes:     num of epochs
         :param int iterations: how often we repeat a particular loop over each document
-        :param int eval_every: Don't evaluate model perplexity, takes too much time
+        :param int eval_every: don't evaluate model perplexity, takes too much time
         """
         # Fix this random seed, or you will get different results
         # And do not change the dictionary-file nor the corpus-file
@@ -93,6 +103,11 @@ class Generator:
         self.topic_terms = lda.get_topics()
 
     def generate(self, time_limit, time_unit):
+        """
+        生成新的合成流量数据
+
+        :param int time_limit:         
+        """
         np.random.seed(2022)
         start_t = time.time()
         syn_trace = []
