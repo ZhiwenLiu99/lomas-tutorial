@@ -13,12 +13,12 @@ __all__ = ["Generator"]
 class Generator:
     def __init__(self, ip_id_dict, ordered_ippair, cdf_iat, cdf_size):
         """
-        generator submodel
+        功能：基于历史流量数据进行模型训练、基于训练好的模型产生新的合成流量数据。
 
-        :param ip_id_dict:
-        :param ordered_ippair:
-        :param cdf_iat:
-        :param cdf_size:
+        :param dict ip_id_dict: key=index of IP, value=(anonymized)IP addr
+        :param list ordered_ippair: ordered IP pair (IP is represented by its index)
+        :param dict cdf_iat: key=percentile, value=values of interarrival time CDF at some percentile
+        :param dict cdf_size: key=percentile, value=values of flow size CDF at some percentile
         """
         self.ip_id_dict = self.transpose_dict(ip_id_dict)
         self.ordered_ippair = ordered_ippair
