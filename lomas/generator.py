@@ -6,20 +6,9 @@ from gensim import corpora
 from gensim.models import LdaModel
 import logging
 # logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
-# logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.ERROR)
+logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.ERROR)
 
-__all__ = ["HelloWorld", "Generator"]
-
-class HelloWorld(object):
-    """This is the class HelloWorld
-    it prints "hello world!"
-    """
-    def __init__(self):
-        """This is the class HelloWorld
-        When an instance is created prints the string "hello world!"
-        """
-        print("hello world!")
-
+__all__ = ["Generator"]
 
 class Generator(object):
     def __init__(self, ip_id_dict, ordered_ippair, cdf_iat, cdf_size):
@@ -49,8 +38,8 @@ class Generator(object):
         获取每个源目的对之间的流数据，并以二维数组的数据类型储存
 
         :param pandas.DataFrame trace_input: can be accessed using lomas.Preprocessor.trace_input
-        :return:
-        :rtype:
+        :return: self.arr_flow_type, self.dictionary, self.corpus
+        :rtype: 2D list, 1D list, 2D list
         """
         start_t = time.time()
         for ippair in self.ordered_ippair:
@@ -67,6 +56,8 @@ class Generator(object):
         将字典的键和值进行转置
 
         :param dict dic: dict to be transposed by key-value
+        :return: transposed dict
+        :rtype: dict
         """
         return dict((v, k) for k, v in dic.items())
 
@@ -84,6 +75,8 @@ class Generator(object):
         :param int passes:     num of epochs
         :param int iterations: how often we repeat a particular loop over each document
         :param int eval_every: don't evaluate model perplexity, takes too much time
+        :return: self.doc_topics (document-topic distribution), self.topic_terms (topic-word distribution)
+        :rtype: 2D np.array, 2D np.array
         """
         # Fix this random seed, or you will get different results
         # And do not change the dictionary-file nor the corpus-file
@@ -121,6 +114,8 @@ class Generator(object):
 
         :param int time_limit: control how many flows will be generated (s.t. [num. of flow]*[avg. iat] <= [time_limit])
         :param int time_unit: time uint of time_limit
+        :return: self.trace_syn (synthetic trace)
+        :rtype: pandas.DataFrame
         """
         np.random.seed(2022)
         start_t = time.time()
@@ -146,6 +141,8 @@ class Generator(object):
         从隐空间概率分布矩阵中采样，以概率分布产生流大小和流间隔的联合取值
 
         :param int doc_idx: index according to ordered IP pair
+        :return: interarrival time, flow size
+        :rtype: int, int
         """
         theta = self.doc_topics[doc_idx].copy()
         z = np.argmax(np.random.multinomial(1, theta))    # sample topic index , e.g. select topic
@@ -161,6 +158,14 @@ class Generator(object):
         return np.ceil(iat), np.ceil(byt)
     
     def sampling_helper(self, cdf, tag):
+        """
+        辅助函数，将离散化的流大小、流间隔标签映射回实数值
+
+        :param pandas.DataFrame cdf: pandas.DataFrame(['percentile', 'cdf'])
+        :param int tag: discretized size or iat tag
+        :return: continuous value of size or iat
+        :rtype: float
+        """
         percent = list(cdf['percentile'].values)
         bounds = cdf['cdf'].values
         idx = percent.index(tag)
