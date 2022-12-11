@@ -8,7 +8,7 @@ import logging
 # logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 # logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.ERROR)
 
-__all__ = ["Generator"]
+__all__ = ["HelloWorld", "Generator"]
 
 class HelloWorld(object):
     """This is the class HelloWorld
