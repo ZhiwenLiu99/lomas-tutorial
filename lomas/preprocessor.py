@@ -100,11 +100,14 @@ class Preprocessor:
     def ts_to_interval(self):
         def group_diff(x):
             return pd.Series(x).diff()
-        self.trace_input['ts'] -= self.trace_input['ts'].min()
         self.trace_input.sort_values(by=['srcip', 'dstip', 'ts'], inplace=True)
-        self.trace_input['iat'] = self.trace_input.groupby(['srcip', 'dstip'])['ts'].apply(group_diff)
-        self.trace_input.dropna(how='any', inplace=True)
-        # self.trace_input.drop('ts', axis=1, inplace=True)
+        if 'iat' not in list(self.trace_input.columns):
+            self.trace_input['ts'] -= self.trace_input['ts'].min()
+            self.trace_input['iat'] = self.trace_input.groupby(['srcip', 'dstip'])['ts'].apply(group_diff)
+            self.trace_input.dropna(how='any', inplace=True)
+            # self.trace_input.drop('ts', axis=1, inplace=True)
+        else:
+            print("[Info >> preprocessing] column ['iat'] already exists!")
     
     def select_active_ip(self, lower_bound):
         """

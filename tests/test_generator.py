@@ -5,10 +5,10 @@ from lomas.preprocessor import Preprocessor
 from lomas.generator import Generator
 
 if __name__ == "__main__":
-    setting_path = os.path.join(os.getcwd(), "./config/data_path_v2.json")
+    setting_path = os.path.join(os.getcwd(), "./config/data_path_v3.json")
     config = utils.load_json_setting(setting_path)
-
     trace_name = 'FB_Cluster_C'
+    
     data = Preprocessor(f_path=config[trace_name]['path'], 
                         f_name=config[trace_name]['filenames'], 
                         f_type=config[trace_name]['type'],

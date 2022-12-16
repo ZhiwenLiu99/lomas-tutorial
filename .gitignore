@@ -158,4 +158,10 @@ cython_debug/
 
 # raw data
 data/
+data2/
 */nohup.out
+
+tests/data/
+tests/fig/
+
+*.tar.gz

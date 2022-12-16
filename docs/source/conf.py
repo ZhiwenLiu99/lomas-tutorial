@@ -46,4 +46,4 @@ html_theme = 'sphinx_rtd_theme'
 # -- Options for EPUB output
 epub_show_urls = 'footnote'
 
-autodoc_mock_imports = ['gensim']
+autodoc_mock_imports = ['gensim', 'statsmodels', 'scipy', 'heapq', 'matplotlib', 'seaborn']
