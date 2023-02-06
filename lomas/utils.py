@@ -3,7 +3,8 @@ import numpy as np
 import pandas as pd
 from scipy.stats import ks_2samp
 
-__all__ = ["load_json_setting"]
+__all__ = ["load_json_setting", "transpose_dict", "metric_ksd_avg", \
+           "metric_ksd", "metric_topN_pair", ""]
 
 def load_json_setting(f_name: str) -> dict:
     """
