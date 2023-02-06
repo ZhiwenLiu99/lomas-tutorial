@@ -10,6 +10,9 @@ from scapy.layers.inet import IP, TCP, UDP
 __all__ = ["Preprocessor", "PCAPProcessor"]
 
 class Preprocessor:
+    """
+    用于对流级别数据进行预处理，包括特征离散化、数据集分割、特征频率统计等。
+    """
     def __init__(self, f_path, f_name, f_type, column_names=None, protocol=None, MAIG=None):
         """
         preprocessor submodel
@@ -45,7 +48,7 @@ class Preprocessor:
         """
         :param str f_path: 输入的trace数据所在文件夹路径
         :param str f_name: 输入的trace数据文件名
-        :raise ValueError: 如果f_name的文件类型不属于 [csv, xlsx, pkl, parquet]
+        :raise ValueError: 如果f_name的文件类型不属于 [csv, xlsx, pkl, parquet] 中的任意一种
         """
         _path = os.path.join(f_path, f_name)
         _type = f_name.split('.')[-1]
@@ -65,6 +68,14 @@ class Preprocessor:
             raise ValueError("File type not defined!")
 
     def get_pcap_level_trace(self, f_path, f_name, protocol, MAIG):
+        """
+        :param str f_path: 输入的trace数据所在文件夹路径
+        :param str f_name: 输入的trace数据文件名
+        :param str protocol: 指定PCAP数据包的协议类型，如TCP、UDP等
+        :param int MAIG: 最大超时间隔（minimum allowed interflow gap）
+        :return: 从单个pcap文件中解析得到的流级别数据
+        :rtype: pd.DataFrame
+        """
         dfs = []
         for f in f_name[:2]:
             pcap_processor = PCAPProcessor(os.path.join(f_path, f), protocol, MAIG)
@@ -86,6 +97,9 @@ class Preprocessor:
         return pcap_processor.process_pcap()
 
     def get_pcap_level_trace_mp(self, f_path, f_name, protocol, MAIG):
+        """
+        功能同 get_pcap_level_trace 函数，多进程处理
+        """
         dfs = []
         params = []
         MAX_WORKER = int(0.8 * os.cpu_count())
@@ -98,6 +112,9 @@ class Preprocessor:
         return pd.concat(dfs)
 
     def ts_to_interval(self):
+        """
+        根据时间戳计算“流到达间隔”
+        """
         def group_diff(x):
             return pd.Series(x).diff()
         self.trace_input.sort_values(by=['srcip', 'dstip', 'ts'], inplace=True)
@@ -112,18 +129,29 @@ class Preprocessor:
     def select_active_ip(self, lower_bound):
         """
         只保留样本量大于lower_bound的IP对
+        :param int lower_bound: 样本数量的筛选阈值
         """
         self.trace_input['num_of_flow'] = self.trace_input.groupby(['srcip', 'dstip'])['iat'].transform('count')
         self.trace_input = self.trace_input[self.trace_input['num_of_flow']>lower_bound]
         self.trace_input.drop('num_of_flow', axis=1, inplace=True)
         
     def get_id_of_ip(self):
+        """
+        将IP按字典序排序，并存为dict数据类型。其中dict-key为字典序编号，dict-value为IP
+        :return: 排序后的IP及其下标
+        :rtype: dict
+        """
         ip_list = self.trace_input['srcip'].values
         ip_list = np.append(ip_list, self.trace_input['dstip'].values)
         ip_list = list(np.sort(np.unique(ip_list)))     # 所有 ip 按字符顺序排序
         return dict(zip(ip_list, np.arange(len(ip_list))))
     
     def get_ordered_ippair(self) -> list:
+        """
+        统计数据集中所有的IP-Pair，并按字典序进行排序。
+        :return: 排序后的IP-Pair
+        :rtype: list
+        """
         self.trace_input['srcid'] = self.trace_input['srcip'].map(self.ip_id_dict)
         self.trace_input['dstid'] = self.trace_input['dstip'].map(self.ip_id_dict)
         self.trace_input['pairid'] = self.trace_input['srcid'].astype('str') + '_' + \
@@ -133,6 +161,12 @@ class Preprocessor:
         return pair_list
     
     def get_cdf(self, col_name):
+        """
+        特征离散化，计算特征的百分位值
+        :param string col_name: 特征对应的列名
+        :return: 百分位点，及对应的百分位取值
+        :rtype: dict
+        """
         arr = np.log10(1.0 + np.sort(self.trace_input[col_name].values))
         percentile = self.auto_percentile(arr, num_of_step=40)
         length = len(arr)-1
@@ -146,6 +180,13 @@ class Preprocessor:
         return dict(zip(percentile, cdf_val))
     
     def auto_percentile(self, arr, num_of_step=40):
+        """
+        将原始特征进行等频分箱，返回每个分箱区间的下标值
+        :param np.array arr: 数组格式存储的原始特征值
+        :param int num_of_step: 区间数量
+        :return: 每个分箱区间的下标值
+        :rtype: np.array
+        """
         step = (np.max(arr)-np.min(arr)) / num_of_step
         percentile = [0]
         curr = np.min(arr)
@@ -159,6 +200,9 @@ class Preprocessor:
         return np.array(percentile).astype('int')
     
     def discretization_to_flow_type(self):
+        """
+        将流大小和流间隔两个维度的特征，转换为离散化处理的二元组（flow type），并以字符串形式存储
+        """
         arr_size = np.log10(1.0 + self.trace_input['size'].values)
         arr_iat = np.log10(1.0 + self.trace_input['iat'].values)
         df_cdf_size = pd.DataFrame({'percentile': list(self.cdf_size.keys()), 
@@ -173,6 +217,13 @@ class Preprocessor:
         self.trace_input.drop(['size_d', 'iat_d'], axis=1, inplace=True)
 
     def discretization(self, cdf, arr):
+        """
+        根据百分位值对特征进行离散化处理，原始特征值变为对应特征值区间的区间编号
+        :param dict cdf: 特征值对应的百分位值
+        :param np.array arr: 原始特征值
+        :return: 散化处特征值
+        :rtype: list
+        """
         percent = cdf['percentile'].values
         bounds = cdf['cdf'].values
         length = len(percent)
@@ -191,15 +242,25 @@ class Preprocessor:
 
 
 class PCAPProcessor:
+    """
+    用于将 PCAP 包级别数据聚合成为流级别数据。
+    """
     def __init__(self, f_name, protocol, MAIG):
         """
-        pcap-file processor model
+        pcap-file processor submodel
+        :param str f_name: 输入的trace数据文件名（pcap文件类型输入一组 f_name，List[f_name]）
+        :param str protocol: 指定PCAP数据包的协议类型，如TCP、UDP等
+        :param int MAIG: 从pcap数据包中恢复流级别数据所设定的最大超时间隔（minimum allowed interflow gap），单位毫秒
         """
         self.f_name = f_name
         self.protocol = protocol
         self.MAIG = MAIG
     
     def process_pcap(self):
+        """
+        根据PCAP数据包的协议类型调用不同的预处理函数
+        :raise ValueError: 如果协议类型既不是TCP也不是UDP
+        """
         if self.protocol=="tcp":
             return self.process_pcap_tcp()
         elif self.protocol=="udp":
@@ -208,6 +269,11 @@ class PCAPProcessor:
             raise ValueError("protocol type undefined!")
 
     def process_pcap_tcp(self):
+        """
+        对协议类型为TCP的PCAP数据包文件进行预处理
+        :return: 流级别数据
+        :rtype: pd.DataFrame
+        """
         print(f"process_pcap_tcp: {self.f_name}")
         flow_metadata_dict = {}
         for (pkt_data, pkt_metadata) in RawPcapReader(self.f_name):
@@ -253,6 +319,11 @@ class PCAPProcessor:
         return df[['srcip', 'dstip', 'ts', 'size']]
     
     def process_pcap_udp(self):
+        """
+        对协议类型为UDP的PCAP数据包文件进行预处理
+        :return: 流级别数据
+        :rtype: pd.DataFrame
+        """
         print(f"process_pcap_tcp: {self.f_name}")
         flow_metadata_dict = {}
         for (pkt_data, pkt_metadata) in RawPcapReader(self.f_name):
