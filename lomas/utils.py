@@ -146,3 +146,50 @@ def metric_topN_pair(dfs=[], models=[], N=5) -> dict:
                 metric_tmp.append(1.0*freq[0]/df_comp_stats['count'].sum())
         metric_dict[models[i]] = metric_tmp
     return metric_dict
+
+def params_comp_3d(f_path="/root/zliu/Lomas/simulation_res_thesis/", 
+                   params=[], 
+                   trace="EDU1"):
+    X, Y, Z = [], [], []
+    for i in params[0]:
+        for j in params[1]:
+            f_name = f"incast_{trace}_Ti_{i}_Td_{j}/fct_star_incastTraffic_{trace}_dcqcn_paper_vwin.txt"
+            df = pd.read_csv(f_path+f_name, sep=" ", header=None)
+            df.columns = ['srcip', 'dstip', 'srcport', 'dstport', 'size', 'ts', 'fct', 'sdfct']
+            df['slowdown'] = 1.0*df['fct'] / df['sdfct']
+            df.loc[df['slowdown']<1.0, 'slowdown'] = 1.0
+            X.append(i)
+            Y.append(j)
+            # Z.append(df['slowdown'].quantile(0.95))
+            Z.append(df['slowdown'].mean())
+    df_res = pd.DataFrame({'X':X, 'Y':Y, 'Z':Z})
+    return df_res
+
+def pfc_delay(f_path="/root/zliu/Lomas/simulation_res_thesis/", 
+              params=[], 
+              trace="EDU1"):
+    X, Y, Z = [], [], []
+    for i in params[0]:
+        for j in params[1]:
+            f_name = f"incast_{trace}_Ti_{i}_Td_{j}/fct_star_incastTraffic_{trace}_dcqcn_paper_vwin.txt"
+            df_fct = pd.read_csv(f_path+f_name, sep=" ", header=None)
+            df_fct.columns = ['srcip', 'dstip', 'srcport', 'dstport', 'size', 'ts', 'fct', 'sdfct']
+            f_name = f"incast_{trace}_Ti_{i}_Td_{j}/pfc_star_incastTraffic_{trace}_dcqcn_paper_vwin.txt"
+            df_pfc = pd.read_csv(f_path+f_name, sep=" ", header=None)
+            df_pfc.columns = ['ts', 'node_id', 'node_type', 'is_index', 'state']
+            pfc_delay = 0
+            pfc_dict = {}
+            for idx, row in df_pfc.iterrows():
+                if row.node_id in pfc_dict.keys():
+                    if row.state==0:
+                        pfc_delay += (row.ts-pfc_dict[row.node_id])
+                        pfc_dict.pop(row.node_id)
+                    else:
+                        pfc_dict[row.node_id] = row.ts
+                elif row.state==1:
+                    pfc_dict[row.node_id] = row.ts
+            X.append(i)
+            Y.append(j)
+            Z.append(100*pfc_delay/df_fct['fct'].sum())
+    df_res = pd.DataFrame({'X':X, 'Y':Y, 'Z':Z})
+    return df_res

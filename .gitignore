@@ -165,3 +165,8 @@ tests/data/
 tests/fig/
 
 *.tar.gz
+
+# files
+*/evaluation_mmd.json
+*/evaluation_v1.py
+*/test_fattree.py
