@@ -1,9 +1,18 @@
-Template for the Read the Docs tutorial
+Lomas tutorial
 =======================================
 
-This GitHub template includes fictional Python library
-with some basic Sphinx docs.
+The prototype source code of the paper:
+
+*Locality Matters! Traffic Demand Modeling in Datacenter Networks* (Best Student Paper Award)
+
+Zhiwen Liu (Maintainer), Mowei Wang, Yong Cui
+
+the 6th Asia-Pacific Workshop on Networking (APNet 2022).
 
 Read the tutorial here:
 
 https://docs.readthedocs.io/en/stable/tutorial/
+
+### System architecture 
+
+![architecture](https://github.com/ZhiwenLiu99/lomas-tutorial/blob/master/fig/architecture.pdf)
