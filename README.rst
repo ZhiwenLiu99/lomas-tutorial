@@ -18,6 +18,6 @@ System architecture
 
 A figure directive:
 
-.. figure:: https://github.com/ZhiwenLiu99/lomas-tutorial/blob/master/fig/architecture.png
+.. figure:: fig/architecture.png
    :alt: Architecture of Lomas
 
