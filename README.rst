@@ -16,7 +16,7 @@ https://docs.readthedocs.io/en/stable/tutorial/
 System architecture
 ---------------------------------------- 
 
-A figure directive:
+The architecture of Lomas:
 
 .. figure:: fig/architecture.png
    :alt: Architecture of Lomas
