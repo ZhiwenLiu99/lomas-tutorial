@@ -18,7 +18,6 @@ System architecture
 
 A figure directive:
 
-.. figure:: https://github.com/ZhiwenLiu99/lomas-tutorial/blob/master/fig/architecture.pdf
-   :alt: reStructuredText, the markup syntax
+.. figure:: https://github.com/ZhiwenLiu99/lomas-tutorial/blob/master/fig/architecture.png
+   :alt: Architecture of Lomas
 
-   A figure is an image with a caption and/or a legend:
