@@ -13,6 +13,12 @@ Read the tutorial here:
 
 https://docs.readthedocs.io/en/stable/tutorial/
 
-### System architecture 
+System architecture
+---------------------------------------- 
 
-![architecture](https://github.com/ZhiwenLiu99/lomas-tutorial/blob/master/fig/architecture.pdf)
+A figure directive:
+
+.. figure:: https://github.com/ZhiwenLiu99/lomas-tutorial/blob/master/fig/architecture.pdf
+   :alt: reStructuredText, the markup syntax
+
+   A figure is an image with a caption and/or a legend:
