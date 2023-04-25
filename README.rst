@@ -11,15 +11,8 @@ the 6th Asia-Pacific Workshop on Networking (APNet 2022).
 
 Read the tutorial here:
 
-https://docs.readthedocs.io/en/stable/tutorial/
+https://lomas-tutorial.readthedocs.io/zh/latest/
 
-System architecture
----------------------------------------- 
-
-The architecture of Lomas:
-
-.. figure:: fig/architecture.png
-   :alt: Architecture of Lomas
 
 How to use
 ----------------------------------------
@@ -52,3 +45,12 @@ How to use
   # Running 
   if __name__ == "__main__":
       main(config)
+
+
+System architecture
+---------------------------------------- 
+
+The architecture of Lomas:
+
+.. figure:: fig/architecture.png
+   :alt: Architecture of Lomas

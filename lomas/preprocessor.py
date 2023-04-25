@@ -1,5 +1,6 @@
 import os
 import time
+import datetime as dt
 import numpy as np
 import pandas as pd
 import concurrent.futures
@@ -115,12 +116,12 @@ class Preprocessor:
         """
         根据时间戳计算“流到达间隔”
         """
-        def group_diff(x):
-            return pd.Series(x).diff()
+        # def group_diff(x):
+        #     return pd.Series(x).diff()
         self.trace_input.sort_values(by=['srcip', 'dstip', 'ts'], inplace=True)
         if 'iat' not in list(self.trace_input.columns):
             self.trace_input['ts'] -= self.trace_input['ts'].min()
-            self.trace_input['iat'] = self.trace_input.groupby(['srcip', 'dstip'])['ts'].apply(group_diff)
+            self.trace_input['iat'] = self.trace_input.groupby(['srcip', 'dstip'])['ts'].diff()
             self.trace_input.dropna(how='any', inplace=True)
             # self.trace_input.drop('ts', axis=1, inplace=True)
         else:
@@ -173,7 +174,7 @@ class Preprocessor:
         cdf_val = []
         for j in percentile:
             if j==0.0:
-                cdf_val.append(0)
+                cdf_val.append(np.min(arr)*0.9)
             else:
                 idx = int(1.0*j*length/10000.0)
                 cdf_val.append(arr[idx])
@@ -228,8 +229,10 @@ class Preprocessor:
         bounds = cdf['cdf'].values
         length = len(percent)
         arr_res = []
-        for x in arr:
-            if x==0.0:
+        for idx, x in enumerate(arr):
+            # if idx%100000==0:
+                # print(dt.datetime.now(), idx, x)
+            if x<=np.min(arr):
                 arr_res.append(0)
             elif x>bounds[-1]:
                 # print(f"warning: input x exceed the max value in CDF.\n-> x:{x}, max of CDF:{bounds[-1]}")
@@ -238,6 +241,8 @@ class Preprocessor:
                 for i in range(1,length):
                     if (x>bounds[i-1]) and (x<=bounds[i]):
                         arr_res.append(int(percent[i]))
+                        break
+        # print(len(arr_res))
         return arr_res
 
 

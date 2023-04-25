@@ -159,10 +159,16 @@ cython_debug/
 # raw data
 data/
 data2/
+data_netshare/
+data_netshare_raw/
+data_netshare_syn/
+results/
 */nohup.out
 
 tests/data/
 tests/fig/
+tests_new_dataset/
+tests_new_dataset_v2/
 
 *.tar.gz
 
